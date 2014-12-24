@@ -44,13 +44,12 @@ func main() {
 
 #注册自己的Appender类型
 
-
 ```golang
 //实现创建的接口（第一个是被创建的Appender的Id，第二个是创建的时候所需要的其他参数），请保证线程安全
 //type CreateAppender func(string, map[string]string) (Appender, error)
 
 func MyType (id string, params[string]string) (Appender, error) {
-	
+	//...
 }
 
 //实现Appender接口, 请保证线程安全
@@ -61,6 +60,8 @@ type Appender interface {
 	SetThreshold(threshold Level)
 }
 ```
+
+#main 文件
 
 ```golang
 package main
@@ -74,13 +75,13 @@ func init() {
 }
 
 func main() {
-    log.info("My First Log")
+    //....
 }
 ```
 
 #配置文件(log4g.properties 放到项目下)
 ```shell
-appender]
+[appender]
 myAppender.type = myType
 myAppender.threshold = info
 myAppender.参数1 = 参数值1
@@ -89,4 +90,20 @@ myAppender.参数2 = 参数值2
 [logger]
 __root__ = debug, std
 github.com/xiaoyu830411 = info, myAppender
+```
+#代码使用
+```golang
+package xiaoyu830411
+
+import (
+    "github.com/xiaoyu830411/log4g/logger"
+)
+
+var (
+	log := logger.GetLog("github.com/xiaoyu830411")
+)
+
+func method1() {
+    log.info("I am %v", "Xiaoyu")
+}
 ```
