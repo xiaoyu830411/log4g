@@ -16,7 +16,7 @@ var (
 		newLevel(4, "ERROR"),
 		newLevel(5, "FATAL")
 
-	ALL_LEVELS = [...]Level{ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF}
+	__ALL_LEVELS = [...]Level{ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF}
 )
 
 type Level struct {
@@ -40,7 +40,7 @@ func (this Level) GetName() string {
 }
 
 func getLevelByName(name string) (*Level, error) {
-	for _, level := range ALL_LEVELS {
+	for _, level := range __ALL_LEVELS {
 		if strings.EqualFold(strings.ToUpper(name), level.GetName()) {
 			return &level, nil
 		}
@@ -50,7 +50,7 @@ func getLevelByName(name string) (*Level, error) {
 }
 
 func getLevelById(id int) (*Level, error) {
-	for _, level := range ALL_LEVELS {
+	for _, level := range __ALL_LEVELS {
 		if level.GetId() == id {
 			return &level, nil
 		}

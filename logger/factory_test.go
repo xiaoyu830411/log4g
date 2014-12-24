@@ -17,25 +17,25 @@ func TestInitFunc(t *testing.T) {
 }
 
 func TestCreateAppender(t *testing.T) {
-	RegisterAppenderType("testType", CreateTestAppenderTypeFunc)
+	RegisterAppenderType("testType", createTestAppenderTypeFunc)
 
 	params := make(map[string]string)
 	params["threshold"] = "info"
 	params["path"] = "testAppender.log"
 
-	appenderConfig := AppenderConfig{
+	config := appenderConfig{
 		Id:     "testAppender",
 		Type:   "testType",
 		Params: params,
 	}
 
-	createAppender(appenderConfig.Id, appenderConfig)
+	createAppender(config.Id, config)
 
-	appender, ok := factory.appenderList[appenderConfig.Id]
+	appender, ok := factory.appenderList[config.Id]
 	if !ok {
 		t.Error("No appender be created!")
 	} else {
-		if _, ok := appender.(*TestAppender); !ok {
+		if _, ok := appender.(*myTestAppender); !ok {
 			t.Error(fmt.Sprintf("%s is not equals %s", appender.GetThreshold().GetName(), INFO.GetName()))
 		}
 	}
@@ -44,7 +44,7 @@ func TestCreateAppender(t *testing.T) {
 func TestCreateLog(t *testing.T) {
 	appenerList := []string{"std", "testAppender"}
 
-	logConfig := LogConfig{
+	config := logConfig{
 		Id:           "github.com/xiaoyu830411",
 		Level:        INFO,
 		AppenderList: appenerList,
@@ -56,7 +56,7 @@ func TestCreateLog(t *testing.T) {
 		delete(factory.appenderList, "testAppender")
 	}
 
-	log := createLog("github.com/xiaoyu830411", logConfig)
+	log := createLog("github.com/xiaoyu830411", config)
 	if len(log.GetAppenderList()) < 2 {
 		t.Error("Except 2 appenders")
 	}
@@ -70,32 +70,32 @@ func TestCreateLog(t *testing.T) {
 	}
 }
 
-func CreateTestAppenderTypeFunc(id string, params map[string]string) (Appender, error) {
-	return &TestAppender{
+func createTestAppenderTypeFunc(id string, params map[string]string) (Appender, error) {
+	return &myTestAppender{
 		id:        id,
 		threshold: INFO,
 	}, nil
 }
 
-type TestAppender struct {
+type myTestAppender struct {
 	id        string
 	threshold Level
 }
 
-func (this TestAppender) Fire(event Event) {
+func (this myTestAppender) Fire(event Event) {
 	if event.GetLevel().GetId() >= this.threshold.GetId() {
 		fmt.Println(format(event))
 	}
 }
 
-func (this TestAppender) GetThreshold() Level {
+func (this myTestAppender) GetThreshold() Level {
 	return this.threshold
 }
 
-func (this *TestAppender) SetThreshold(threshold Level) {
+func (this *myTestAppender) SetThreshold(threshold Level) {
 	this.threshold = threshold
 }
 
-func (this TestAppender) GetId() string {
+func (this myTestAppender) GetId() string {
 	return this.id
 }

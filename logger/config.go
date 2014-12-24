@@ -12,24 +12,24 @@ import (
 var conf config
 
 type config struct {
-	logs              map[string]LogConfig
-	appenders         map[string]AppenderConfig
-	managementService ManagementServiceConfig
+	logs              map[string]logConfig
+	appenders         map[string]appenderConfig
+	managementService managementServiceConfig
 }
 
-type LogConfig struct {
+type logConfig struct {
 	Id           string
 	Level        Level
 	AppenderList []string
 }
 
-type AppenderConfig struct {
+type appenderConfig struct {
 	Id     string
 	Type   string
 	Params map[string]string
 }
 
-type ManagementServiceConfig struct {
+type managementServiceConfig struct {
 	Port    int
 	Service bool
 }
@@ -57,8 +57,8 @@ func loadConfig(path string) (*config, error) {
 	}
 
 	conf = config{
-		logs:      make(map[string]LogConfig),
-		appenders: make(map[string]AppenderConfig),
+		logs:      make(map[string]logConfig),
+		appenders: make(map[string]appenderConfig),
 	}
 
 	if appenders, ok := p.GetSection("appender"); ok {
@@ -85,20 +85,20 @@ func loadConfig(path string) (*config, error) {
 			}
 
 			fmt.Printf("T is %v in appender", t)
-			appenderConfig := AppenderConfig{
+			config := appenderConfig{
 				Id:     id,
 				Params: parameters,
 				Type:   t,
 			}
 
-			conf.appenders[id] = appenderConfig
+			conf.appenders[id] = config
 		}
 	}
 
 	if logs, ok := p.GetSection("logger"); ok {
 		for id, value := range logs.Elements() {
 			values := strings.Split(value, ",")
-			logConfig := LogConfig{}
+			config := logConfig{}
 
 			l := len(values)
 
@@ -112,20 +112,20 @@ func loadConfig(path string) (*config, error) {
 					return nil, errors.New(fmt.Sprintf("Invalid logger config[%v]. The logger config : packageName = level, appender1, appender2...", id))
 				}
 
-				logConfig.Level = *level
+				config.Level = *level
 			}
 
 			if l > 1 {
 				appenders := values[1:l]
-				logConfig.AppenderList = appenders
+				config.AppenderList = appenders
 			}
 
-			conf.logs[id] = logConfig
+			conf.logs[id] = config
 		}
 	}
 
 	if management, ok := p.GetSection("management"); ok {
-		managementServiceConfig := ManagementServiceConfig{
+		config := managementServiceConfig{
 			Port:    18080,
 			Service: true,
 		}
@@ -136,7 +136,7 @@ func loadConfig(path string) (*config, error) {
 				return nil, errors.New(fmt.Sprintf("Invalid port[%v] in management. It should be a number[1-65535]!", port))
 			}
 
-			managementServiceConfig.Port = i
+			config.Port = i
 		}
 
 		if service, ok := management.Get("service"); ok {
@@ -145,16 +145,16 @@ func loadConfig(path string) (*config, error) {
 				return nil, errors.New(fmt.Sprintf("Invalid service[%v] in management. It should be false or true!", b))
 			}
 
-			managementServiceConfig.Service = b
+			config.Service = b
 		}
 
-		conf.managementService = managementServiceConfig
+		conf.managementService = config
 	}
 
 	return &conf, nil
 }
 
-func GetLogConfig(pkg string) LogConfig {
+func getLogConfig(pkg string) logConfig {
 	for {
 		if v, ok := conf.logs[pkg]; ok {
 			return v

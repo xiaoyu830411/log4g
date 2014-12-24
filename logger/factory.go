@@ -52,22 +52,22 @@ func GetLog(pkg string) Log {
 		return v
 	}
 
-	logConfig := GetLogConfig(pkg)
+	config := getLogConfig(pkg)
 
-	log := createLog(pkg, logConfig)
+	log := createLog(pkg, config)
 	factory.logInstanceList[pkg] = log
 
 	return log
 }
 
-func createLog(pkg string, logConfig LogConfig) Log {
+func createLog(pkg string, config logConfig) Log {
 	log := Log{
 		id:           pkg,
-		level:        logConfig.Level,
+		level:        config.Level,
 		appenderList: make(map[string]Appender),
 	}
 
-	for _, v := range logConfig.AppenderList {
+	for _, v := range config.AppenderList {
 		if appender, ok := factory.appenderList[v]; ok {
 			log.AddAppender(v, appender)
 		} else {
@@ -89,13 +89,13 @@ func initAppenders() {
 	}
 }
 
-func createAppender(id string, appenderConfig AppenderConfig) {
-	createAppenderFunc, ok := factory.appenderTypeList[appenderConfig.Type]
+func createAppender(id string, config appenderConfig) {
+	createAppenderFunc, ok := factory.appenderTypeList[config.Type]
 	if !ok {
-		panic(errors.New("No find appender type[" + appenderConfig.Type + "] for appender[" + id + "]. Please registher the appender type before startup!"))
+		panic(errors.New("No find appender type[" + config.Type + "] for appender[" + id + "]. Please registher the appender type before startup!"))
 	}
 
-	appender, err := createAppenderFunc(id, appenderConfig.Params)
+	appender, err := createAppenderFunc(id, config.Params)
 	if err != nil {
 		panic(err)
 	}
