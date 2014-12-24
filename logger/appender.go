@@ -25,10 +25,10 @@ type consoleAppender struct {
 	lock      sync.RWMutex
 }
 
-func CreateConsoleAppender(id string, params map[string]string) (Appender, error) {
+func createConsoleAppender(id string, params map[string]string) (Appender, error) {
 	var threshold Level = ALL
 	if v, ok := params["threshold"]; ok {
-		if level, err := GetLevelByName(v); err == nil {
+		if level, err := getLevelByName(v); err == nil {
 			threshold = *level
 		}
 	}
@@ -83,10 +83,10 @@ type dailyRollingFileAppender struct {
 	lock      sync.RWMutex
 }
 
-func CreateDailyRollingFileAppender(id string, params map[string]string) (Appender, error) {
+func createDailyRollingFileAppender(id string, params map[string]string) (Appender, error) {
 	var threshold Level = ALL
 	if v, ok := params["threshold"]; ok {
-		if level, err := GetLevelByName(v); err == nil {
+		if level, err := getLevelByName(v); err == nil {
 			threshold = *level
 		}
 	}
@@ -115,7 +115,7 @@ func CreateDailyRollingFileAppender(id string, params map[string]string) (Append
 		id:        id,
 		threshold: threshold,
 		path:      path,
-		date:      GetDate(),
+		date:      getDate(),
 		file:      file,
 	}
 
@@ -126,7 +126,7 @@ func (this dailyRollingFileAppender) Fire(event Event) {
 	this.lock.Lock()
 	defer this.lock.Lock()
 
-	if GetDate() > this.date {
+	if getDate() > this.date {
 		if err := this.roll(); err != nil {
 			fmt.Println(err)
 		}
@@ -138,7 +138,7 @@ func (this dailyRollingFileAppender) Fire(event Event) {
 }
 
 func (this *dailyRollingFileAppender) roll() error {
-	current := GetDate()
+	current := getDate()
 	if current > this.date {
 		file := this.file
 		file.Close()
@@ -205,7 +205,7 @@ func (this dailyRollingFileAppender) GetId() string {
 	return this.id
 }
 
-func GetDate() int {
+func getDate() int {
 	year, month, day := time.Now().Date()
 	return (year*10000 + int(month)*100 + day)
 }

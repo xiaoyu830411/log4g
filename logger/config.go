@@ -107,7 +107,7 @@ func loadConfig(path string) (*config, error) {
 			}
 
 			if l > 0 {
-				level, err := GetLevelByName(strings.TrimSpace(values[0]))
+				level, err := getLevelByName(strings.TrimSpace(values[0]))
 				if err != nil {
 					return nil, errors.New(fmt.Sprintf("Invalid logger config[%v]. The logger config : packageName = level, appender1, appender2...", id))
 				}

@@ -22,8 +22,8 @@ func init() {
 }
 
 func initAppenderTypes() {
-	factory.appenderTypeList["std"] = CreateConsoleAppender
-	factory.appenderTypeList["file"] = CreateDailyRollingFileAppender
+	factory.appenderTypeList["std"] = createConsoleAppender
+	factory.appenderTypeList["file"] = createDailyRollingFileAppender
 }
 
 func initStdAppender() {

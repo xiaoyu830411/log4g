@@ -39,7 +39,7 @@ func (this Level) GetName() string {
 	return this.name
 }
 
-func GetLevelByName(name string) (*Level, error) {
+func getLevelByName(name string) (*Level, error) {
 	for _, level := range ALL_LEVELS {
 		if strings.EqualFold(strings.ToUpper(name), level.GetName()) {
 			return &level, nil
@@ -49,7 +49,7 @@ func GetLevelByName(name string) (*Level, error) {
 	return nil, errors.New("Not find level by name[" + name + "]!")
 }
 
-func GetLevelById(id int) (*Level, error) {
+func getLevelById(id int) (*Level, error) {
 	for _, level := range ALL_LEVELS {
 		if level.GetId() == id {
 			return &level, nil

@@ -25,7 +25,7 @@ func TestCanbeOutputted(t *testing.T) {
 func TestCreateConsoleAppender(t *testing.T) {
 	params := make(map[string]string)
 	params["threshold"] = "ERROR"
-	appender, err := CreateConsoleAppender("myTest", params)
+	appender, err := createConsoleAppender("myTest", params)
 	if err != nil {
 		t.Error(err)
 	}
@@ -45,7 +45,7 @@ func TestCreateDailyRollingFileAppender(t *testing.T) {
 	params["path"] = "myTest2.log"
 
 	defer os.Remove("myTest2.log")
-	appender, err := CreateDailyRollingFileAppender("myTest2", params)
+	appender, err := createDailyRollingFileAppender("myTest2", params)
 
 	if err != nil {
 		t.Error(err)
