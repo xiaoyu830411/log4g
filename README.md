@@ -4,7 +4,7 @@ Log
 
 #安装
 ```shell
-go get -u github.com/xiaoyu830411/log4g
+go get -u github.com/xiaoyu830411/log4g/logger
 ```
 
 快速使用
