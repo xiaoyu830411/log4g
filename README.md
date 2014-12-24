@@ -93,14 +93,14 @@ github.com/xiaoyu830411 = info, myAppender
 ```
 #代码使用
 ```golang
-package xiaoyu830411
+package myPackage
 
 import (
     "github.com/xiaoyu830411/log4g/logger"
 )
 
 var (
-	log := logger.GetLog("github.com/xiaoyu830411")
+	log := logger.GetLog("github.com/xiaoyu830411/myPackage")
 )
 
 func method1() {
