@@ -103,7 +103,7 @@ func createAppender(id string, config appenderConfig) {
 	registerAppender(id, appender)
 }
 
-func RegisterAppenderType(id string, appenderFactory CreateAppender) {
+func RegisterAppenderType(id string, appenderFactory CreateAppender) string {
 	factory.lock.Lock()
 	defer factory.lock.Unlock()
 
@@ -113,6 +113,7 @@ func RegisterAppenderType(id string, appenderFactory CreateAppender) {
 	}
 
 	factory.appenderTypeList[id] = appenderFactory
+	return id
 }
 
 func registerAppender(id string, appender Appender) {
