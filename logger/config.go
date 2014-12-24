@@ -40,7 +40,7 @@ func initConfig() error {
 		return err
 	}
 
-	c, err := loadConfig(workDir + "log4g.properties")
+	c, err := loadConfig(workDir + string(os.PathSeparator) + "log4g.properties")
 	if err != nil {
 		return err
 	}

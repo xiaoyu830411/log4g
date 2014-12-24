@@ -51,7 +51,6 @@ func (this *Log) IsFatal() bool {
 
 func (this *Log) fire(level Level, message string) {
 	event := newEvent(this.GetId(), level, message, time.Now())
-
 	this.lock.RLock()
 	defer this.lock.RUnlock()
 
@@ -65,7 +64,7 @@ func (this *Log) Trace(format string, value ...interface{}) {
 		return
 	}
 
-	message := fmt.Sprintf(format, value)
+	message := getFormattedMessage(format, value)
 	this.fire(TRACE, message)
 }
 
@@ -74,7 +73,7 @@ func (this *Log) Debug(format string, value ...interface{}) {
 		return
 	}
 
-	message := fmt.Sprintf(format, value)
+	message := getFormattedMessage(format, value)
 	this.fire(DEBUG, message)
 }
 
@@ -83,7 +82,7 @@ func (this *Log) Info(format string, value ...interface{}) {
 		return
 	}
 
-	message := fmt.Sprintf(format, value)
+	message := getFormattedMessage(format, value)
 	this.fire(INFO, message)
 }
 
@@ -92,7 +91,7 @@ func (this *Log) Warn(format string, value ...interface{}) {
 		return
 	}
 
-	message := fmt.Sprintf(format, value)
+	message := getFormattedMessage(format, value)
 	this.fire(WARN, message)
 }
 
@@ -101,7 +100,7 @@ func (this *Log) Error(format string, value ...interface{}) {
 		return
 	}
 
-	message := fmt.Sprintf(format, value)
+	message := getFormattedMessage(format, value)
 	this.fire(ERROR, message)
 }
 
@@ -110,8 +109,16 @@ func (this *Log) Fatal(format string, value ...interface{}) {
 		return
 	}
 
-	message := fmt.Sprintf(format, value)
+	message := getFormattedMessage(format, value)
 	this.fire(FATAL, message)
+}
+
+func getFormattedMessage(format string, value ...interface{}) string {
+	if len(value) == 0 {
+		return format
+	}
+
+	return fmt.Sprintf(format, value)
 }
 
 func (this *Log) setLevel(level Level) {

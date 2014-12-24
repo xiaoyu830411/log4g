@@ -31,7 +31,7 @@ import (
 )
 
 var (
-    log := logger.GetLog("main")
+    log = logger.GetLog("main")
 )
 
 func main() {
@@ -70,9 +70,10 @@ import (
     "github.com/xiaoyu830411/log4g/logger"
 )
 
-func init() {
-	logger.RegisterAppenderType("myType", MyType)
-}
+var (
+	_ = logger.RegisterAppenderType("myType", MyType) //必须在GetLog之前
+    log = logger.GetLog("main")
+)
 
 func main() {
     //....

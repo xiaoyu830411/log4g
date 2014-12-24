@@ -3,6 +3,7 @@ package logger
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
 )
 
@@ -68,7 +69,7 @@ func createLog(pkg string, config logConfig) Log {
 	}
 
 	for _, v := range config.AppenderList {
-		if appender, ok := factory.appenderList[v]; ok {
+		if appender, ok := factory.appenderList[strings.TrimSpace(v)]; ok {
 			log.AddAppender(v, appender)
 		} else {
 			fmt.Println("No find the appender[" + v + "] for logger[" + pkg + "]!")
